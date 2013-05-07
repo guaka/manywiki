@@ -1,9 +1,18 @@
 <template name="changes">
   <h1>changes</h1>
   
-  <h2>veganwiki</h2>
   {{#each changes}}
-  <div>{{comment}} {{title}} {{user}}</div>
+  {{> wiki}}
   {{/each}}
+</template>
 
+<template name="wiki">
+  <h2>{{name}}</h2>
+  {{#each rc}}
+  {{> change}}
+  {{/each}}
+</template>
+
+<template name="change">
+  <div>{{comment}} {{title}} {{user}}</div>
 </template>
