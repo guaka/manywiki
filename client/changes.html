@@ -8,7 +8,7 @@
 
 <template name="wiki">
   <div class="wiki">
-    <h2>{{name}}</h2>
+    <h2><a href="http://{{name}}/">{{name}}</a></h2>
     {{#each rc}}
     {{> change}}
     {{/each}}
