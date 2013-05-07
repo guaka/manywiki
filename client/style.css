@@ -24,3 +24,7 @@ h2 {
   float: left;
   font-size: 80%;
 }
+
+#copyright {
+  clear: both;
+}

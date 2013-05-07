@@ -28,7 +28,8 @@ changesObj = {}
     Session.set 'changed', Meteor.uuid()
 
 
-updateChanges = ->
+@updateChanges = ->
+  Session.set 'updated', new Date()
   for w in wikis
     fetchChanges w
 
@@ -38,6 +39,8 @@ Meteor.startup ->
 
 Meteor.setInterval updateChanges, 90 * 1000 #ms
 
+Template.changes.updated = ->
+  Session.get 'updated'
 
 Template.changes.changes = ->
   Session.get 'changed'
@@ -46,3 +49,7 @@ Template.changes.changes = ->
     rc: p[1]
   _.sortBy changes, (x) -> x.name
 
+
+Template.changes.events
+  'click #refresh': ->
+    updateChanges()

@@ -1,6 +1,8 @@
 <template name="changes">
   <h1>changes</h1>
-  
+  <div id="refresh" class="btn">refresh</div>
+  {{updated}}
+
   {{#each changes}}
   {{> wiki}}
   {{/each}}

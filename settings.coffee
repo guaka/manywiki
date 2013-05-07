@@ -6,5 +6,7 @@
   'couchwiki.org'
   'trashwiki.org'
   'sharewiki.org'
+  'cultwiki.org'
+  'visawiki.org'
   { name: 'hitchwiki.org', apiPath: '/en' }
 ]
