@@ -21,12 +21,11 @@ changesObj = {}
     json = JSON.parse result.content
     rc = json.query.recentchanges
 
-    changesObj[name] = _.map(rc, (x) ->
-      x.link = 'http://' + wiki + '/en/' + x.title
+    changesObj[name] = _.map rc, (x) ->
+      x.link = 'http://' + name + '/en/' + x.title
       x
-    )
-    Session.set 'changed', Meteor.uuid()
 
+    Session.set 'changed', Meteor.uuid()
 
 
 updateChanges = ->
