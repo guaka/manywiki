@@ -1,8 +1,3 @@
-@wikis = [
-  'vegan.wiki.yt', 'velo.wiki.yt',  'wiki.yt',
-  'couchwiki.org', 'trashwiki.org', 'sharewiki.org',
-  { wiki: 'hitchwiki.org', apiPath: '/en' },
-]
 
 
 apiCall = '/api.php?format=json&action=query&list=recentchanges&rcprop=user|title|ids|comment|sizes|timestamp'
@@ -10,37 +5,45 @@ apiCall = '/api.php?format=json&action=query&list=recentchanges&rcprop=user|titl
 
 # global for debugging
 @changes = []
+changesObj = {}
 
-
-fetchChanges = (wiki) ->
+@fetchChanges = (wiki) ->
   apiPath = '/w'
-  if typeof wiki isnt 'string'
+  if typeof wiki is 'string'
+    name = wiki
+  else
     apiPath = wiki.apiPath
-    wiki = wiki.wiki
+    name = wiki.name
 
-  Meteor.http.get 'http://' + wiki + apiPath + apiCall, (error, result) ->
-    console.log error
+
+  Meteor.http.get 'http://' + name + apiPath + apiCall, (error, result) ->
+    console.log error if error
     json = JSON.parse result.content
     rc = json.query.recentchanges
-    console.log rc
-    changes.push
-      name: wiki
-      rc: _.map(rc, (x) ->
-        x.link = 'http://' + wiki + '/en/' + x.title
-        x
-      )
 
+    changesObj[name] = _.map(rc, (x) ->
+      x.link = 'http://' + wiki + '/en/' + x.title
+      x
+    )
     Session.set 'changed', Meteor.uuid()
 
 
-Meteor.startup ->
+
+updateChanges = ->
   for w in wikis
-    console.log w
     fetchChanges w
 
+
+Meteor.startup ->
+  updateChanges()
+
+Meteor.setInterval updateChanges, 90 * 1000 #ms
 
 
 Template.changes.changes = ->
   Session.get 'changed'
+  changes = _.map (_.pairs changesObj), (p) ->
+    name: p[0]
+    rc: p[1]
   _.sortBy changes, (x) -> x.name
 
