@@ -1,11 +1,24 @@
+@wikis = [
+  'vegan.wiki.yt', 'velo.wiki.yt',  'wiki.yt',
+  'couchwiki.org', 'trashwiki.org', 'sharewiki.org',
+  { wiki: 'hitchwiki.org', apiPath: '/en' },
+]
 
+
+apiCall = '/api.php?format=json&action=query&list=recentchanges&rcprop=user|title|ids|comment|sizes|timestamp'
 
 
 # global for debugging
 @changes = []
 
+
 fetchChanges = (wiki) ->
-  Meteor.http.get 'http://' + wiki + rcPath, (error, result) ->
+  apiPath = '/w'
+  if typeof wiki isnt 'string'
+    apiPath = wiki.apiPath
+    wiki = wiki.wiki
+
+  Meteor.http.get 'http://' + wiki + apiPath + apiCall, (error, result) ->
     console.log error
     json = JSON.parse result.content
     rc = json.query.recentchanges
@@ -29,5 +42,5 @@ Meteor.startup ->
 
 Template.changes.changes = ->
   Session.get 'changed'
-  changes
+  _.sortBy changes, (x) -> x.name
 
