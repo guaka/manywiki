@@ -1,0 +1,26 @@
+
+
+body {
+  font-family: sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+h1 {
+  padding: 0;
+  margin: 0;
+}
+
+h2 {
+  font-size: 100%;
+  padding: 0;
+  margin: 0;
+}
+
+.wiki {
+  margin: 4px;
+  width: 300px;
+  height: 350px;
+  float: left;
+  font-size: 80%;
+}

@@ -7,12 +7,14 @@
 </template>
 
 <template name="wiki">
-  <h2>{{name}}</h2>
-  {{#each rc}}
-  {{> change}}
-  {{/each}}
+  <div class="wiki">
+    <h2>{{name}}</h2>
+    {{#each rc}}
+    {{> change}}
+    {{/each}}
+  </div>
 </template>
 
 <template name="change">
-  <div>{{comment}} {{title}} {{user}}</div>
+  <div><a href="{{link}}">{{title}}</a> {{user}} {{comment}} {{timestamp}}</div>
 </template>
