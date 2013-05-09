@@ -65,25 +65,33 @@ Template.dashboard.isActive = (page) ->
   Session.equals 'activeTab', this.name
 
 
+
+eventHref = (e) ->
+  if e.srcElement? then e.srcElement.href else e.currentTarget.href
+
 Template.dashboard.events
   'click #search': ->
     # updateChanges()
 
   'click .nav-tabs a': (e) ->
-    href = if e.srcElement? then e.srcElement.href else e.currentTarget.href
-    tab = href.split('#tab-')[1]
+    tab = eventHref(e).split('#tab-')[1]
     Session.set 'activeTab', tab
 
 
   'click .content a': (e) ->
-    href = if e.srcElement? then e.srcElement.href else e.currentTarget.href
-    title = href.split('#')[1]
+    title = eventHref(e).split('#')[1]
     changePage title
     window.scrollTo 0, 0
 
-  'keydown #search': (evt) ->
+  'click h1 a': (e) ->
+    title = eventHref(e).split('#')[1]
+    changePage title
+    window.scrollTo 0, 0
+
+  'keydown #page': (evt) ->
     if evt.keyCode is 13
-      search $('#search').val()
-      $('#search').val ''
+      changePage $('#page').val()
+      $('#page').val ''
 
-
+  'click #page': (evt) ->
+    $('#page').val ''
