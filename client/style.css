@@ -33,3 +33,7 @@ h2 {
   font-style: italic;
   font-size: 70%;
 }
+
+.nav a.disabled {
+  color: #ccc;
+}

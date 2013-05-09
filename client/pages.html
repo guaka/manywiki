@@ -13,7 +13,14 @@
   <div class="tabbable tabs-left">
     <ul class="nav nav-tabs">
       {{#each changes}}
-      <li{{#if isActive}} class="active"{{/if}}><a href="#tab-{{name}}" id="tabholder-{{name}}" data-toggle="tab">{{name}}</a></li>
+      <li{{#if isActive}} class="active"{{/if}}>
+        {{#if emptyPage}}
+          <a class="disabled">{{name}}
+        {{else}}
+          <a class="enabled" href="#tab-{{name}}" id="tabholder-{{name}}" data-toggle="tab">{{name}}
+        {{/if}}
+          </a>
+      </li>
       {{/each}}
     </ul>
     

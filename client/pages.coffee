@@ -13,8 +13,8 @@ hostname = (w) ->
   else
     w.name
 
-@fixLinks = (s) ->
-  s = s.replace(new RegExp('<img.*>', 'gi'), '#')
+@fixLinks = (s, host) ->
+  s = s.replace(new RegExp('<img(.*)src="(/(files|en/images).*)">', 'gi'), '<img$1src="http://' + host + '$2">')
   for w in wikis
     s = s.replace(new RegExp('http://' + hostname(w) + '/en/', 'gi'), '#')
   s
@@ -39,8 +39,8 @@ hostname = (w) ->
     fetchPages w
 
 Meteor.startup ->
-  changePage 'Main Page'
-  Session.set 'activeTab', 'hitchwiki.org'
+  changePage location.hash.split('#')[1] or 'Main Page'
+  Session.set 'activeTab', 'trashwiki.org'
   updateChanges()
 
 
@@ -56,8 +56,9 @@ Template.dashboard.changes = ->
   Session.get 'changed'
   changes = _.map (_.pairs changesObj), (p) ->
     active: false
+    emptyPage: -1 isnt p[1].indexOf "There is currently no text in this page."
     name: p[0]
-    content: new Handlebars.SafeString fixLinks p[1]
+    content: new Handlebars.SafeString fixLinks p[1], p[0]
   _.sortBy changes, (x) -> x.name
 
 
@@ -69,11 +70,9 @@ Template.dashboard.isActive = (page) ->
 eventHref = (e) ->
   if e.srcElement? then e.srcElement.href else e.currentTarget.href
 
-Template.dashboard.events
-  'click #search': ->
-    # updateChanges()
 
-  'click .nav-tabs a': (e) ->
+Template.dashboard.events
+  'click .nav-tabs a.enabled': (e) ->
     tab = eventHref(e).split('#tab-')[1]
     Session.set 'activeTab', tab
 
