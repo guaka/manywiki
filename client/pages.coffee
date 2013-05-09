@@ -14,7 +14,7 @@ hostname = (w) ->
     w.name
 
 @fixLinks = (s, host) ->
-  s = s.replace(new RegExp('<img(.*)src="(/(files|en/images).*)">', 'gi'), '<img$1src="http://' + host + '$2">')
+  s = s.replace(new RegExp('<img(.*)src="(/.*)>', 'gi'), '<img$1src="http://' + host + '$2>')
   for w in wikis
     s = s.replace(new RegExp('http://' + hostname(w) + '/en/', 'gi'), '#')
   s
