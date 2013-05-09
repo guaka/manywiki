@@ -28,3 +28,8 @@ h2 {
 #copyright {
   clear: both;
 }
+
+.change .comment {
+  font-style: italic;
+  font-size: 70%;
+}

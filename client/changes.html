@@ -1,7 +1,15 @@
 <template name="changes">
-  <h1>changes</h1>
-  <div id="refresh" class="btn">refresh</div>
-  {{updated}}
+  <div id="header">
+    <div class="row">
+      <div class="span4">
+        <h1>changes</h1>
+      </div>
+      <div class="span8">
+        <div id="refresh" class="btn">refresh</div>
+        {{updated}}
+      </div>
+    </div>
+  </div>
 
   {{#each changes}}
   {{> wiki}}
@@ -10,7 +18,7 @@
 
 <template name="wiki">
   <div class="wiki">
-    <h2><a href="http://{{name}}/">{{name}}</a></h2>
+    <h2><a href="http://{{name}}/en/Special:Recentchanges">{{name}}</a></h2>
     {{#each rc}}
     {{> change}}
     {{/each}}
@@ -18,5 +26,11 @@
 </template>
 
 <template name="change">
-  <div><a href="{{link}}">{{title}}</a> {{user}} {{comment}} {{timestamp}}</div>
+  <div class="change">
+    <a href="{{link}}">{{title}}</a> 
+    {{user}} 
+    {{logtype}}
+    <span class="comment">{{comment}}</span> 
+    {{timestamp}}
+  </div>
 </template>

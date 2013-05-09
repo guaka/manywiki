@@ -1,6 +1,6 @@
 
 
-apiCall = '/api.php?format=json&action=query&list=recentchanges&rcprop=user|title|ids|comment|sizes|timestamp'
+apiCall = '/api.php?format=json&action=query&list=recentchanges&rcprop=user|title|ids|comment|sizes|timestamp|loginfo'
 
 
 # global for debugging
@@ -23,13 +23,18 @@ changesObj = {}
 
     changesObj[name] = _.map rc, (x) ->
       x.link = 'http://' + name + '/en/' + x.title
+      x.timestamp = moment(x.timestamp).fromNow()
+      if x.logtype is 'delete'
+        x.comment = ''
+      else
+        x.comment = x.comment[..30]
       x
 
     Session.set 'changed', Meteor.uuid()
 
 
 @updateChanges = ->
-  Session.set 'updated', new Date()
+  Session.set 'updated', moment().format("H:mm:ss")
   for w in wikis
     fetchChanges w
 
