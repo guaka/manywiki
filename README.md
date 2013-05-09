@@ -1,7 +1,7 @@
 
-**wikifarmchanges** is a nice one page overview of recent changes of many wikis.
+**manywiki** is wiki aggregation tool
 
-Check http://wikiytchanges.meteor.com/ for an example.
+Check http://manywiki.meteor.com/ for an example.
 
 
 It's doing the HTTP gets directly from the client. There's almost nothing going on the server at this point.
