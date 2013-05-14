@@ -12,7 +12,7 @@
 
   <div class="tabbable tabs-left">
     <ul class="nav nav-tabs">
-      {{#each changes}}
+      {{#each pages}}
       <li{{#if isActive}} class="active"{{/if}}>
         {{#if emptyPage}}
           <a class="disabled">{{name}}
@@ -25,7 +25,7 @@
     </ul>
     
     <div class="tab-content">
-      {{#each changes}}
+      {{#each pages}}
       <div class="tab-pane content{{#if isActive}} active{{/if}}" id="tab-{{name}}">
         {{content}}
       </div>

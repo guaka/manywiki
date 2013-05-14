@@ -3,8 +3,8 @@
 apiCall = '/index.php?action=render&title='
 
 # Global for debugging
-@changes = []
-changesObj = {}
+@pages = []
+@pagesObj = {}
 
 
 hostname = (w) ->
@@ -27,39 +27,47 @@ hostname = (w) ->
     apiPath = wiki.apiPath
     name = wiki.name
 
-  url = 'http://' + name + apiPath + apiCall + Session.get 'currentTitle'
-  Meteor.http.get url, (error, result) ->
-    console.log error if error
-    changesObj[name] = result.content
+  url = 'http://' + name + apiPath + '/api.php?callback=?'
+  console.log url
+
+  $.getJSON(url,
+    format: 'json'
+    action: 'parse'
+    prop: 'text'
+    page: Session.get 'currentTitle'
+    redirects: true
+  ).done (data) ->
+    console.log data.parse.text
+    pagesObj[name] = data.parse.text['*']
     Session.set 'changed', Meteor.uuid()
 
 
-@updateChanges = ->
+@updatePages = ->
   for w in wikis
     fetchPages w
 
 Meteor.startup ->
   changePage location.hash.split('#')[1] or 'Main Page'
   Session.set 'activeTab', 'trashwiki.org'
-  updateChanges()
+  updatePages()
 
 
 changePage = (p) ->
   Session.set 'currentTitle', p
-  updateChanges()
+  updatePages()
 
 Template.dashboard.currentTitle = ->
   Session.get 'currentTitle'
 
 
-Template.dashboard.changes = ->
+Template.dashboard.pages = ->
   Session.get 'changed'
-  changes = _.map (_.pairs changesObj), (p) ->
+  pages = _.map (_.pairs pagesObj), (p) ->
     active: false
-    emptyPage: -1 isnt p[1].indexOf "There is currently no text in this page."
+    emptyPage: false  # -1 isnt p[1].indexOf "There is currently no text in this page."
     name: p[0]
     content: new Handlebars.SafeString fixLinks p[1], p[0]
-  _.sortBy changes, (x) -> x.name
+  _.sortBy pages, (x) -> x.name
 
 
 Template.dashboard.isActive = (page) ->
