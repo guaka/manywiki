@@ -5,6 +5,12 @@
 @pagesObj = {}
 
 
+changePage = (p) ->
+  Router.page p
+  Session.set 'currentTitle', p
+  updatePages()
+
+
 hostname = (w) ->
   if typeof w is 'string'
     w
@@ -24,7 +30,6 @@ hostname = (w) ->
     name = wiki.name
 
   url = 'http://' + name + apiPath + '/api.php?callback=?'
-  console.log url
 
   $.getJSON(url,
     format: 'json'
@@ -33,7 +38,6 @@ hostname = (w) ->
     page: Session.get 'currentTitle'
     redirects: true
   ).done (data) ->
-    console.log data.parse.text
     pagesObj[name] = data.parse.text['*']
     Session.set 'changed', Meteor.uuid()
 
@@ -43,14 +47,12 @@ hostname = (w) ->
     fetchPages w
 
 Meteor.startup ->
+  console.log 'starting...'
   changePage location.hash.split('#')[1] or 'Main Page'
-  Session.set 'activeTab', 'trashwiki.org'
+  Session.set 'activeTab', Session.get('activeTab') or 'couchwiki.org'
   updatePages()
 
 
-changePage = (p) ->
-  Session.set 'currentTitle', p
-  updatePages()
 
 Template.dashboard.currentTitle = ->
   Session.get 'currentTitle'
@@ -82,16 +84,16 @@ Template.dashboard.events
 
 
   'click .content a': (e) ->
-    alert e
-    console.log e
-    title = eventHref(e).split('#')[1]
-    changePage title
+    newPage = e.toElement.href.split('/').slice(-1)[0]
+    e.preventDefault()
+    changePage newPage
     window.scrollTo 0, 0
 
   'click h1 a': (e) ->
     title = eventHref(e).split('#')[1]
     changePage title
     window.scrollTo 0, 0
+    false
 
   'keydown #page': (evt) ->
     if evt.keyCode is 13
