@@ -1,7 +1,5 @@
 
 
-apiCall = '/index.php?action=render&title='
-
 # Global for debugging
 @pages = []
 @pagesObj = {}
@@ -14,10 +12,8 @@ hostname = (w) ->
     w.name
 
 @fixLinks = (s, host) ->
-  s = s.replace(new RegExp('<img(.*)src="(/.*)>', 'gi'), '<img$1src="http://' + host + '$2>')
-  for w in wikis
-    s = s.replace(new RegExp('http://' + hostname(w) + '/en/', 'gi'), '#')
-  s
+  s.replace(new RegExp('<img(.+?)src="(/.*?)>', 'gi'), '<img$1src="http://' + host + '$2>')
+
 
 @fetchPages = (wiki) ->
   apiPath = '/w'
@@ -64,7 +60,7 @@ Template.dashboard.pages = ->
   Session.get 'changed'
   pages = _.map (_.pairs pagesObj), (p) ->
     active: false
-    emptyPage: false  # -1 isnt p[1].indexOf "There is currently no text in this page."
+    emptyPage: false
     name: p[0]
     content: new Handlebars.SafeString fixLinks p[1], p[0]
   _.sortBy pages, (x) -> x.name
@@ -86,6 +82,8 @@ Template.dashboard.events
 
 
   'click .content a': (e) ->
+    alert e
+    console.log e
     title = eventHref(e).split('#')[1]
     changePage title
     window.scrollTo 0, 0
